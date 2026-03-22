@@ -24,6 +24,8 @@ Spring Boot API (Java)
 MongoDB      ML Service (Python Flask)
 ```
 
+![Architecture](diagrams/switchai-architecture.png)
+
 ---
 
 ## 📦 Project Structure
