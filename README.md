@@ -1,3 +1,212 @@
+# 🚂 The Problem: Rail Yard Classification at Scale
+
+## Overview
+
+Modern freight rail yards—especially large hump yards like Rice Yard in Waycross, GA operated by CSX Transportation—are responsible for sorting thousands of railcars per day into outbound trains.
+
+Each railcar must be assigned to the correct classification track (bowl track) based on its destination, routing, and operational constraints.
+
+At scale, this becomes a complex, real-time decision problem involving:
+
+- Limited track capacity
+- Unpredictable train arrivals
+- Conflicting priorities
+- Physical and safety constraints
+- Downstream network dependencies
+
+---
+
+## How a Hump Yard Works (Simplified)
+
+Rail yard operations follow a pipeline:
+
+### 1. Intake (Receiving Yard)
+- Trains arrive and occupy receiving tracks
+- Cars are inspected and prepared for classification
+
+### 2. Classification (Hump + Bowl)
+- Cars are pushed over a hump and routed into tracks
+- Each track represents a destination or outbound block
+
+### 3. Outbound Build (Pull-down)
+- Tracks are pulled and assembled into outbound trains
+- Trains are built in a specific order and depart
+
+---
+
+## Core Operational Challenges
+
+### 1. Arrival Variability
+Trains do not arrive evenly—they "bunch."
+
+**Impact:**
+- Receiving yard congestion
+- Delays before classification begins
+- Unbalanced workload across the yard
+
+---
+
+### 2. Hump vs Pull-down Imbalance
+Cars can be classified faster than they can be assembled into outbound trains.
+
+**Impact:**
+- Bowl tracks fill up
+- Reduced effective capacity
+- Forced suboptimal decisions
+
+---
+
+### 3. Track Contamination ("Dirty Tracks")
+Incorrect or poorly planned assignments lead to mixed or unusable tracks.
+
+**Impact:**
+- Rework (re-humping, doubling, digging cars out)
+- Increased dwell time
+- Reduced throughput
+
+---
+
+### 4. Capacity Constraints
+Each track has limits:
+
+- Number of cars
+- Total weight
+- Operational restrictions
+
+**Impact:**
+- Invalid assignments
+- Overflow conditions
+- Increased manual intervention
+
+---
+
+### 5. Misroutes and Rework
+Even small error rates scale quickly.
+
+**Impact:**
+- 15–20 minute delays per incident
+- Cascading downstream effects
+- Increased labor and resource usage
+
+---
+
+### 6. Downstream Dependencies
+Outbound trains must be built correctly and on time.
+
+**Impact:**
+- Missed connections
+- Network-wide delays
+- Reduced service reliability
+
+---
+
+## Why This Problem Is Hard
+
+Rail yard classification is not just about assigning a car to a track.
+
+It is about making the **best possible decision given the current state of the yard**, including:
+
+- Track availability
+- Current occupancy
+- Future demand
+- Train priorities
+- Operational constraints
+
+Every decision affects future decisions.
+
+---
+
+## Opportunity for Machine Learning
+
+Machine learning can assist by improving decision quality, not replacing operations.
+
+Key opportunities include:
+
+- Predicting train arrivals and yard congestion
+- Recommending optimal track assignments
+- Identifying high-risk decisions (misroutes, rework)
+- Improving yard flow and reducing dwell time
+
+---
+
+## Project Goal
+
+This project aims to simulate and solve a simplified version of this problem by:
+
+- Modeling railcars, tracks, and classifications
+- Enforcing operational constraints
+- Integrating a machine learning service for track recommendations
+- Building a backend system that reflects real-world yard decision workflows
+
+---
+
+## Summary
+
+> The challenge is not just sorting railcars —  
+> it is maintaining flow across an entire constrained system in real time.
+
+This project focuses on building a system that can:
+
+- Understand the state of a rail yard
+- Make feasible, explainable assignment decisions
+- Evolve toward intelligent, data-driven optimization  
+
+
+# 💡 The Solution: SwitchAI
+
+SwitchAI is a backend system designed to simulate and improve rail yard classification decisions.
+
+It models railcars, classifications, and (future) yard constraints, while integrating with a machine learning service to recommend track assignments.
+
+The system is built with a microservices-ready architecture:
+
+- Spring Boot handles core business logic and data persistence
+- MongoDB stores operational data
+- A separate Python ML service generates track predictions
+
+---
+
+## 🎯 What This System Does
+
+- Stores and manages railcar data
+- Requests track predictions from an ML service
+- Validates and persists classification decisions
+- Provides APIs for querying and filtering yard activity
+
+---
+
+## 🔄 Current Workflow
+
+1. Client submits railcar data
+2. Railcar is stored in MongoDB
+3. Client requests a prediction using `railcarId`
+4. Spring Boot calls the ML service
+5. ML returns a predicted track
+6. Classification is saved in MongoDB
+7. Result is returned to the client
+
+---
+
+## 🚧 Current Limitations (Planned Improvements)
+
+This is an early-stage system. Future improvements will include:
+
+- Track capacity constraints
+- Yard-state-aware decision logic
+- Rule-based validation before ML acceptance
+- More realistic classification modeling
+
+---
+
+## 🎯 Goal
+
+Evolve this system into a realistic prototype of a rail yard decision engine that:
+
+- Understands yard constraints
+- Makes feasible assignment decisions
+- Integrates machine learning as a recommendation layer  
+
+
 # SwitchAI Backend (v1)
 
 SwitchAI is a backend system for managing railcar data and predicting yard track assignments using a machine learning service.
