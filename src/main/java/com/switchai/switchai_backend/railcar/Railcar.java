@@ -24,14 +24,14 @@ public class Railcar {
     @Positive
     private double weight;
     @Positive
-    private double length;
+    private int length;
 
     private String hazardClass;
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public Railcar() {}
 
-    public Railcar(String id, String trainId, String origin, String destination, String carType, double weight, double length, String hazardClass, LocalDateTime createdAt) {
+    public Railcar(String id, String trainId, String origin, String destination, String carType, double weight, int length, String hazardClass, LocalDateTime createdAt) {
         this.id = id;
         this.trainId = trainId;
         this.origin = origin;
@@ -95,7 +95,7 @@ public class Railcar {
         return length;
     }
 
-    public void setLength(double length) {
+    public void setLength(int length) {
         this.length = length;
     }
 

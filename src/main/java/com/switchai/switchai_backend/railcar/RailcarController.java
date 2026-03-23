@@ -11,7 +11,6 @@ public class RailcarController {
 
     private final RailcarService service;
 
-
     public RailcarController(RailcarService service) {
         this.service = service;
 

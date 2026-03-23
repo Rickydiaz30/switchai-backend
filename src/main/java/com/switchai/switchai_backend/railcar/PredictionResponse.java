@@ -3,9 +3,9 @@ package com.switchai.switchai_backend.railcar;
 public class PredictionResponse {
 
     private String railcarId;
-    private int predictedTrack;
+    private String predictedTrack;
 
-    public PredictionResponse(String railcarId, int predictedTrack) {
+    public PredictionResponse(String railcarId, String predictedTrack) {
         this.railcarId = railcarId;
         this.predictedTrack = predictedTrack;
     }
@@ -14,7 +14,7 @@ public class PredictionResponse {
         return railcarId;
     }
 
-    public int getPredictedTrack() {
+    public String getPredictedTrack() {
         return predictedTrack;
     }
 }

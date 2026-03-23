@@ -175,26 +175,44 @@ The system is built with a microservices-ready architecture:
 
 ---
 
-## 🔄 Current Workflow
+## 🔄 Current Workflow 
 
 1. Client submits railcar data
 2. Railcar is stored in MongoDB
-3. Client requests a prediction using `railcarId`
-4. Spring Boot calls the ML service
-5. ML returns a predicted track
-6. Classification is saved in MongoDB
-7. Result is returned to the client
+3. Track data exists with:
+    - capacity (length in feet)
+    - allowed destinations
+    - availability status
+4. Client requests a prediction using `railcarId`
+5. Spring Boot calls the ML service
+6. ML returns a recommended track
+7. Backend evaluates all tracks and filters **valid tracks** based on:
+    - destination match
+    - available capacity
+    - track status
+8. System compares ML recommendation against valid tracks:
+    - If valid → assign ML track
+    - If invalid → assign fallback track
+9. Classification is saved in MongoDB with:
+    - recommendedTrack (ML output)
+    - assignedTrack (final decision)
+    - assignmentSource (ML or FALLBACK)
+10. Result is returned to the client
 
 ---
 
-## 🚧 Current Limitations (Planned Improvements)
+## 🚧 Current Limitations (Next Improvements)
 
-This is an early-stage system. Future improvements will include:
+The system now includes core constraint logic and ML validation. Next improvements:
 
-- Track capacity constraints
-- Yard-state-aware decision logic
-- Rule-based validation before ML acceptance
-- More realistic classification modeling
+- Track capacity updates over time (increment `usedLengthFeet`)
+- Prevent track overfilling across multiple assignments
+- Smarter fallback logic (best-fit instead of first valid track)
+- Grouping logic for outbound train blocks
+- Yard-state-aware decision making (congestion, balancing)
+- Replace mock ML with real predictive model
+- Improved API responses (DTOs, pagination, sorting)
+- Better error handling (avoid generic 500 responses)
 
 ---
 
