@@ -1,0 +1,28 @@
+
+
+services:
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+      - ml
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/switchai
+
+  ml:
+    build: ../ml-service
+    ports:
+      - "5000:5000"
+
+volumes:
+  mongo-data:

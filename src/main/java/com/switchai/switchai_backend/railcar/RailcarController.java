@@ -45,8 +45,8 @@ public class RailcarController {
         return service.save(railcar);
     }
 
-    @PostMapping("/predict")
-    public PredictionResponse predict(@RequestBody PredictionRequest request) {
-        return service.predictTrack(request.getRailcarId());
+    @PostMapping("/predict/{railcarId}")
+    public PredictionResponse predict(@PathVariable String railcarId) {
+        return service.predictTrack(railcarId);
     }
 }

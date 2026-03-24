@@ -2,13 +2,22 @@ package com.switchai.switchai_backend.railcar;
 
 public class PredictionRequest {
 
-    private String railcarId;
+    private String destination;
+    private double length;
 
-    public String getRailcarId() {
-        return railcarId;
+    public String getDestination() {
+        return destination;
     }
 
-    public void setRailcarId(String railcarId) {
-        this.railcarId = railcarId;
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
     }
 }

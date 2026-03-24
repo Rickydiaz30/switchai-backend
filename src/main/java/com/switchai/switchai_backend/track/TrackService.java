@@ -29,21 +29,35 @@ public class TrackService {
     }
 
     public List<Track> findValidTracks(Railcar railcar) {
-        return trackRepository.findAll().stream()
+
+        List<Track> tracks = trackRepository.findAll();
+        System.out.println("Total tracks: " + tracks.size());
+
+        return tracks.stream()
                 .filter(track -> {
 
-                    boolean statusOk = "AVAILABLE".equalsIgnoreCase(track.getStatus());
+                    System.out.println("----");
+                    System.out.println("Checking track: " + track.getTrackNumber());
 
-                    boolean destOk = track.getAllowedDestinations().stream()
-                            .anyMatch(dest ->
-                                    dest != null &&
-                                            railcar.getDestination() != null &&
-                                            dest.trim().equalsIgnoreCase(railcar.getDestination().trim())
-                            );
+                    boolean statusOk = "AVAILABLE".equalsIgnoreCase(track.getStatus());
+                    System.out.println("Status OK: " + statusOk);
+
+                    boolean destOk = track.getAllowedDestinations() != null &&
+                            track.getAllowedDestinations().stream()
+                                    .anyMatch(dest ->
+                                            dest != null &&
+                                                    railcar.getDestination() != null &&
+                                                    dest.trim().equalsIgnoreCase(railcar.getDestination().trim())
+                                    );
+                    System.out.println("Destination OK: " + destOk);
 
                     boolean fits = track.getUsedLengthFeet() + (int) railcar.getLength() <= track.getLengthFeet();
+                    System.out.println("Fits capacity: " + fits);
 
-                    return statusOk && destOk && fits;
+                    boolean result = statusOk && destOk && fits;
+                    System.out.println("FINAL: " + result);
+
+                    return result;
                 })
                 .toList();
     }

@@ -2,6 +2,7 @@ package com.switchai.switchai_backend.railcar;
 
 import com.switchai.switchai_backend.track.Track;
 import com.switchai.switchai_backend.track.TrackService;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,9 +41,26 @@ public class RailcarService {
         Railcar railcar = repository.findById(railcarId)
                 .orElseThrow(() -> new RuntimeException("Railcar not found: " + railcarId));
 
-        String url = "http://localhost:5000/predict";
+        String url = "http://ml:5000/predict";
 
-        Integer mlTrack = restTemplate.postForObject(url, railcar, Integer.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        PredictionRequest dto = new PredictionRequest();
+        dto.setDestination(railcar.getDestination());
+        dto.setLength(railcar.getLength());
+
+
+        HttpEntity<PredictionRequest> request = new HttpEntity<>(dto, headers);
+
+        ResponseEntity<Integer> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                Integer.class
+        );
+
+        Integer mlTrack = response.getBody();
 
 // 1. Get valid tracks
         List<Track> validTracks = trackService.findValidTracks(railcar);
