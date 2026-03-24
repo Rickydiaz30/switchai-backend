@@ -179,11 +179,8 @@ The system is built with a microservices-ready architecture:
 
 1. Client submits railcar data
 2. Railcar is stored in MongoDB
-3. Track data exists with:
-    - capacity (length in feet)
-    - allowed destinations
-    - availability status
-4. Client requests a prediction using `railcarId`
+3. Client requests prediction using railcarId (path variable)
+4. Backend builds a PredictionRequest DTO (destination, length)
 5. Spring Boot calls the ML service
 6. ML returns a recommended track
 7. Backend evaluates all tracks and filters **valid tracks** based on:
@@ -239,6 +236,13 @@ SwitchAI is a backend system for managing railcar data and predicting yard track
 - Python (Flask) – ML Service
 - REST APIs
 
+## 🐳 Running with Docker
+
+Run the full system:
+
+```bash
+docker compose up --build
+
 ---
 
 ## 🏗️ Architecture
@@ -252,6 +256,8 @@ MongoDB      ML Service (Python Flask)
 ```
 
 ![Architecture](diagrams/switchai-architecture.png)
+
+(All services containerized via Docker Compose)
 
 ---
 
@@ -309,21 +315,15 @@ GET /railcars/{id}
 
 #### Predict Track (via ML service)
 ```
-POST /railcars/predict
-```
-
-Body:
-```json
-{
-  "railcarId": "mongo_id_here"
-}
-```
+POST /railcars/predict/{railcarId}
 
 Response:
 ```json
 {
-  "railcarId": "mongo_id_here",
-  "predictedTrack": 61
+   "railcarId": "...",
+   "recommendedTrack": "61",
+   "assignedTrack": "61",
+   "assignmentSource": "ML"
 }
 ```
 
@@ -367,7 +367,8 @@ POST /predict
 
 Default connection:
 ```
-mongodb://localhost:27017
+mongodb://localhost:27018 (Docker)
+
 ```
 
 Collections:
@@ -385,6 +386,10 @@ Collections:
 - Validation (input constraints)
 - Global exception handling
 - Clean layered architecture
+- Dockerized multi-service architecture (Spring, ML, MongoDB)
+- DTO-based ML request mapping (decoupled from domain model)
+- Rule-based validation of ML predictions
+- Fallback assignment logic when ML output is invalid
 
 ---
 
@@ -416,12 +421,11 @@ SwitchaiBackendApplication
 
 ## 📌 Next Steps (Planned)
 
-- Track capacity logic (yard simulation)
-- Pagination
-- Authentication
-- Docker setup
-- Microservices split (API / ML / Data)
-
+- Persistent volume management for MongoDB
+- Destination → block → track mapping layer
+- Smarter fallback logic (best-fit instead of first valid)
+- Track occupancy updates after assignment
+- Yard-state-aware ML inputs
 ---
 
 ## 🧠 Notes
